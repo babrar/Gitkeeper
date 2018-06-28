@@ -1,0 +1,2 @@
+all:
+	mv $PWD cd..
