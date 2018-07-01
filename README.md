@@ -8,6 +8,7 @@ A large repository with multiple contributors on  different IDEs and Operating S
 
 ## Instructions
 ```sh
+# run from your repo root
 $ git clone https://github.com/babrar/build_support_scripts.git
 $ cd build_support_scripts
 $ make
