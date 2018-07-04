@@ -1,2 +1,3 @@
 all:
-	mv $PWD cd..
+	cp $PWD/Gitook/* $PWD
+	
