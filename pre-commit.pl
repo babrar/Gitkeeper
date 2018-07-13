@@ -2,7 +2,6 @@
 # The hook should exit with non-zero status after issuing an appropriate 
 # message if it wants to stop the commit.
 #   ==> Redirect stdout to stderr
-# Replace remote_origin with webiste name (i.e. bitbucket or github)
 # It is run with the working dir set to the top level of the working tree
 #  http://longair.net/blog/2011/04/09/missing-git-hooks-documentation/
 #
@@ -10,6 +9,7 @@
 #
 # Hard errors and Warnings are categorized separately. 
 
+use Cwd;
 use strict;
 use warnings;
 
@@ -18,23 +18,24 @@ my $is_binary = 0;
 my $over_MAX_SIZE = 0; 
 my $filemode_change = 0;
 my $tabs_exist = 0;
-my $curl_fail = 0;
+# my $curl_fail = 0;
 
 my $mintty = 0;
 my $SSH =1;
-
-# Check if SSH to remote_origin can be done 
-my $ssh_stat=`ssh -T git\@remote_origin.org`;
-if ($? != 0)
+my $dir = getcwd();
+=pod
+# Check if SSH to github can be done 
+my $ssh_stat=`ssh -T git\@github.com`;
+if ($? != 1) # for gitghub, successful SSH returns 1
 {
   $SSH = 0;
   print STDERR "$ssh_stat\n";
-  print STDERR "SSH to remote_origin failed. Using HTTPS authentication\n";
+  print STDERR "Warning: SSH to github failed. Using HTTPS authentication\n";
 }
+=cut
+my $MAX_SIZE = 1000000; # Limit files to 1000KB
 
 my $file;
-my $MAX_SIZE = 100000; # Limit files to 100KB
-
 # Go through all modified files that will be commited  
 #  --diff-filter is needed to exclude removed files from the check
 #  ACM is Added, Copied and Modified
@@ -45,83 +46,23 @@ my @file_list =  `git diff --cached --name-only --diff-filter=ACM`;
 # Hard Errors - All tests MUST pass before commit
 #----------------------------------------------------------------------------------------
 
-# Download customer name list to local folder if we don't already have a recent copy
-# Check that it is no more than 1 day old, otherwise download a fresh copy
-if ((! -e ".git/customer_list.txt") || (-M ".git/customer_list.txt" > 1))
-{
-  # Get username 
-  my $USERNAME = `git config --global remote_origin.username`;
-  if ($? != 0) 
-  {
-    print STDERR "remote_origin username is not set.  Please run the following command to set it:\n";
-    print STDERR "  git config --global remote_origin.username <your remote_origin username>\n";
-    exit 1;
-  }
-  chomp($USERNAME);
-  
+=pod  
   # Check if MinTTY environment variable is set 
-  my $env_var = $ENV{'minTTY'};
+  # Windows user can set a minTTY var just for using MINGW32 terminal
+  my $env_var = $ENV{'minTTY'}; 
   if ( length($env_var) )
   {
     $mintty = 1;
   }
-  
-  # Download customer_list.txt using SSH authentication (if fails, use curl)
-  if($SSH)
-  {
-    system("git archive --remote=git\@remote_origin.org:remote/build_support_scripts.git HEAD customer_list.txt | tar -xO > .git/customer_list.txt");
-    if ($? != 0)
-    {
-      print STDERR "SSH failed to download customer_list.txt from remote_origin";
-      exit 1;
-    }
-  }
-  else # use Curl
-  {
-    if (!$mintty)
-    {
-      system("curl -u $USERNAME --show-error --silent --fail --connect-timeout 30 --max-time 40 --output .git/customer_list.txt https://remote_origin.org/remote/build_support_scripts/file");
-      if ($? != 0)
-      {
-        $curl_fail =1;
-      }
-    }
-    else # use winpty on Curl for minTTY terminals
-    {
-      system("winpty curl -u $USERNAME --show-error --silent --fail --connect-timeout 30 --max-time 40 --output .git/customer_list.txt https://remote_origin.org/remote/build_support_scripts/file");
-      if ($? != 0)
-      {
-        $curl_fail =1;
-      }
-    }
-  }
-  
-  # Exit in case of errors
-  if ($curl_fail) 
-  {
-    print "curl failed to download customer_list.txt: $!\n";
-    if (-e ".git/customer_list.txt")
-    {
-      print "Using existing copy\n";
-    }
-    else 
-    {
-      exit 1;
-    }
-  }
-  else
-  {
-    #print "Curl download completed successfully\n";
-  }
-}
-
+=cut
+ 
 # Check for tabs
 foreach $file (@file_list)
 {
   chomp($file);
   
   # Only check source files for tabs
-  if ( $file =~ /\.c$|\.cpp$|\.h$|\.hpp$|\.py$/i )
+  if ( $file =~ /\.c$|\.cpp$|\.h$|\.hpp$|\.js$|\.go$|\.pl$|\.sh$|\.java$|\.py$/i )
   {
     my $line;
     my @lines;
@@ -143,10 +84,12 @@ foreach $file (@file_list)
   }
 }
 # If no tabs found, allow operation to proceed.
+# Otherwise...
 if ($tabs_exist)
 {
   print STDERR "ERROR: Tabs found in files listed above. Commit Aborted.\n";
   print STDERR "Please replace the tabs with spaces.\n";
+  print STDERR "To force the commit, bypass this error by re-running your commit with the '--no-verify' option\n";
   exit 1;
 }
 
@@ -223,7 +166,8 @@ foreach $file (@file_list_M)
 }
 if ($is_binary or $over_MAX_SIZE or $filemode_change)
 {
-  print STDERR "Commit Aborted. To bypass this warning re-run your commit with the '--no-verify' option\n";
+  print STDERR "Commit Aborted \n";
+  print STDERR "To force the commit, bypass this warning by re-running your commit with the '--no-verify' option\n";
   exit 1;
 }
 else
