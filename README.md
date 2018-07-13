@@ -22,11 +22,13 @@ To **bypass** the hook, run git commit with the `--no-verify` option as shown.
 $ git commit -m "don't check me out" --no-verify
 ```
 **Uninstall**
+
 To permananently uninstall hooks, `cd` into Gitook and run
 ```sh
 $ make uninstall
 ```
 **.gitignore**
+
 Add the following lines to the .gitignore of your repo, to stop Gitook being pushed alongside your repository
 ```
 Gitook/
@@ -55,7 +57,9 @@ If faced with such an issue, run init_repo.sh with the `--winpty` option as show
 $ ./init-repo.sh --winpty
  ```
 **Limitation**
+
 Gitook relies on non space-delimited file and directory names. Therefore it will not be compatible with repositories containing space-delimited files and/or directories.
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at [@babrar](https://www.github.com/babrar)
