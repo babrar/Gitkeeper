@@ -1,8 +1,8 @@
-# Git Template Implementation (Perl)
-Git extension (hook) for maintain code consistency in larger shared repositories with multiple contributors.
+# Git Template Implementation in Perl
+Git extension (hook) for maintaining code consistency in larger shared repositories with multiple contributors.
 
 ## Preface
-A large repository with multiple contributors on  different IDEs and Operating Systems has the potential to introduce problems related to non-uniformity of code. Debugging an issue caused by a rogue space/tab or a subtle file mode change can take several hours to fix, costing contributors valuable time.
+A large repository with multiple contributors on different IDEs and Operating Systems has the potential to introduce problems related to non-uniformity of code. Debugging an issue caused by a rogue space/tab or a subtle file mode change can take several hours to fix, costing contributors valuable time.
 
 *Gitook* is an implementation of [Git Template](https://git-template.readthedocs.io) and is designed to aid in minimizing such inconsistencies.
 
@@ -43,7 +43,7 @@ Checks and blocks commits that contain (as of last update) :
 - Tabs in source files
 - Unexpected file-mode changes
 
-Supported Languages : C, C++, Python, Java, JavaScript, Go, Perl, Shell
+**Supported Languages** : C, C++, Python, Java, JavaScript, Go, Perl, Shell
 
 The script *initrepo.sh* is designed to initialize all dependencies .
 When run, *initrepo.sh* :
