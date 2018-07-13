@@ -48,7 +48,7 @@ checks and blocks commits that contain (as of last update) :
 The script *initrepo.sh* is designed to initialize all dependencies .
 When run, *initrepo.sh* :
 - Sets up [Git Template](https://git-template.readthedocs.io).
-- Downloads all necessary hooks from this repository and initialize them in .git_template folder.
+- Downloads all necessary hooks from this repository and initializes them in .git_template folder.
 
 ## Known Issues
 Commands involving curl sometimes freeze inside SourceTree's *MINGW32* Terminal. As a result init_repo.sh may seem to become unresponsive.
@@ -58,11 +58,11 @@ $ ./init-repo.sh --winpty
  ```
 **Limitation**
 
-Gitook relies on non space-delimited file and directory names. Therefore it will not be compatible with repositories containing space-delimited files and/or directories.
+Gitook relies on non-space-delimited file and directory names for functionality. Therefore it will not be compatible with repositories containing space-delimited files and/or directories.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at [@babrar](https://www.github.com/babrar)
+Bug reports and pull requests are welcome on GitHub at [@babrar](https://www.github.com/babrar).
 Gitook comes with a logger. To view run summary or errors `cd` into Gitook and run
 ```sh
 $ make report # view run summary
