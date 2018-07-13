@@ -37,7 +37,7 @@ initrepo.sh
 
 ## Specifications
 **Pre-commit**
-Checks and blocks commits that contain (as of last update) :
+checks and blocks commits that contain (as of last update) :
 - Binary files
 - Oversized files
 - Tabs in source files
