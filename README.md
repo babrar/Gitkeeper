@@ -27,52 +27,73 @@ To permananently uninstall hooks, `cd` into Gitook and run
 ```sh
 $ make uninstall
 ```
-**.gitignore**
+**View Log**
 
-Add the following lines to the .gitignore of your repo, to stop Gitook being pushed alongside your repository
-```
-Gitook/
-initrepo.sh
-```
-
-## Specifications
-**Pre-commit**
-checks and blocks commits that contain (as of last update) :
-- Binary files
-- Oversized files
-- Tabs in source files
-- Unexpected file-mode changes
-
-**Supported Languages** : C, C++, Python, Java, JavaScript, Go, Perl, Shell
-
-The script *initrepo.sh* is designed to initialize all dependencies .
-When run, *initrepo.sh* :
-- Sets up [Git Template](https://git-template.readthedocs.io).
-- Downloads all necessary hooks from this repository and initializes them in .git_template folder.
-
-## Known Issues
-Commands involving curl sometimes freeze inside SourceTree's *MINGW32* Terminal. As a result init_repo.sh may seem to become unresponsive.
-If faced with such an issue, run init_repo.sh with the `--winpty` option as shown below.
- ```sh
-$ ./init-repo.sh --winpty
- ```
-**Limitation**
-
-Gitook relies on non-space-delimited file and directory names for functionality. Therefore it will not be compatible with repositories containing space-delimited files and/or directories.
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at [@babrar](https://www.github.com/babrar).
-Gitook comes with a logger. To view run summary or errors `cd` into Gitook and run
+*Gitook* also comes with a built-in logger. To view run summary or errors `cd` into Gitook and run
 ```sh
 $ make report # view run summary
 # OR
 $ make error # view error log
 ```
+## Specifications
+*Pre-commit.pl*
+checks and blocks commits that contain (as of last update) :
+- Binary files
+- Oversized files
+- Tabs in source files --> Hard error. Program outputs and exits right away
+- Unexpected file-mode changes
+
+The script *initrepo.sh* is designed to initialize all dependencies .
+When run (through the Makefile), *initrepo.sh* :
+- Sets up [Git Template](https://git-template.readthedocs.io).
+- Downloads all necessary hooks from this repository and initializes them in .git_template folder.
+- Adds all components from Gitook to user's *.gitignore*
+i.e.
+```sh
+Gitook/
+initrepo.sh
+```
+
+**Supported Languages** : C, C++, Python, Java, JavaScript, Go, Perl, Shell
+
+## Limitation
+
+Gitook relies on non-space-delimited file and directory names for functionality. Therefore it will not be compatible with repositories containing space-delimited files and/or directories.
+
+
+## Examples
+**Source files with tabs** (i.e. files of only Supported Languages)
+```sh
+$ git commit -m "Commiting file containing tabs"
+tab_file.py @1: this file has   # prints line number
+ERROR: Tabs found in files listed above. Commit Aborted.
+Please replace the tabs with spaces.
+To force the commit, bypass this error by re-running your commit with the '--no-verify' option
+```
+**Binary files**
+```sh
+$ git commit -m "Binary file"
+WARNING: binary_file is binary.
+Please check with repo owner before committing binary files.
+Commit aborted.
+To force the commit, bypass this error by re-running your commit with the '--no-verify' option
+```
+
+**Oversized files**
+```sh
+$ git commit -m "Oversized file"
+WARNING: BigFile is greater than 1000000 bytes.
+Please check with repo owner before committing very large files.
+Commit Aborted
+To force the commit, bypass this warning by re-running your commit with the '--no-verify' option
+```
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at [@babrar](https://www.github.com/babrar).
 
 ## Author
 
-Banin Abrar: [E-mail](baninabrar98@gmail.com), [@babrar](https://www.github.com/babrar)
+Banin Abrar: [E-mail](mailto:baninabrar98@gmail.com), [@babrar](https://www.github.com/babrar)
 
 ## License
 

@@ -7,12 +7,12 @@
 
 # general run log
 timestamp=`date`
-echo "$timestamp" >> Gitook/run.log 
+echo "$timestamp" >> Gitook/log/run.log 
 
 # Create local template dir in case its not already there
 echo "Setting up inital .git_template dir. Will be skipped if already exits"
-mkdir ~/.git_template 2>> Gitook/run.log
-mkdir ~/.git_template/hooks 2>> Gitook/run.log
+mkdir ~/.git_template 2>> Gitook/log/run.log
+mkdir ~/.git_template/hooks 2>> Gitook/log/run.log
 
 # Halt on first error
 #set -e
@@ -25,13 +25,13 @@ mkdir ~/.git_template/hooks 2>> Gitook/run.log
 curl --fail --silent --output ~/.git_template/hooks/pre-commit $hook_url/pre-commit.pl
 
 if [ $? -ne 0 ]; then
-    echo "$timestamp" >> Gitook/error.log
-    curl --fail --silent --show-error --output ~/.git_template/hooks/pre-commit $hook_url/pre-commit.pl 2>> Gitook/error.log
+    echo "$timestamp" >> Gitook/log/error.log
+    curl --fail --silent --show-error --output ~/.git_template/hooks/pre-commit $hook_url/pre-commit.pl 2>> Gitook/log/error.log
     # try to find a workaround if possible (look into tee command)
-    curl --fail --silent --show-error --output ~/.git_template/hooks/pre-commit $hook_url/pre-commit.pl 2>> Gitook/run.log
+    curl --fail --silent --show-error --output ~/.git_template/hooks/pre-commit $hook_url/pre-commit.pl 2>> Gitook/log/run.log
     echo "Warning: (CURL) Unable to download hooks from Gitook. Using local copy..."
     # log errors to error.log
-    #echo "$curlStat" >> Gitook/error.log
+    #echo "$curlStat" >> Gitook/log/error.log
     # moving hooks manually
     cp Gitook/pre-commit.pl ~/.git_template/hooks/pre-commit
 fi
