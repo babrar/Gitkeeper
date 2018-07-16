@@ -8,8 +8,8 @@ parentdir="$(dirname "$(pwd)")"
 # add Gitook/ and initrepo.sh to user's .gitignore
 # if Gitook is run for the first time
 if [ ! -f $parentdir/initrepo.sh ]; then
-	echo "Gitook/" >> $parentdir/.gitignore
-	echo "initrepo.sh" >> $parentdir/.gitignore
+    echo "Gitook/" >> $parentdir/.gitignore
+    echo "initrepo.sh" >> $parentdir/.gitignore
 fi
 
 # move initrepo.sh to repo root
