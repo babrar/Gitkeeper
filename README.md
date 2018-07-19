@@ -40,7 +40,7 @@ $ make error # view error log
 checks and blocks commits that contain (as of last update) :
 - Binary files
 - Oversized files
-- Tabs in source files --> *Hard error. Program outputs and exits right away*
+- Hard tabs in source files --> *Hard error. Program outputs and exits right away*
 - Unexpected file-mode changes
 
 The script *initrepo.sh* is designed to initialize all dependencies .
